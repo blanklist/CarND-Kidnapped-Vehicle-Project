@@ -184,12 +184,9 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
         }
       }
 
-      double landmark_x = map_landmarks.landmark_list[j].x_f;
-      double landmark_y = map_landmarks.landmark_list[j].y_f;
-
-      double x_weight = pow(obvs_x - landmark_x, 2) / (2 * pow(std_landmark[0], 2));
-      double y_weight = pow(obvs_y - landmark_y, 2) / (2 * pow(std_landmark[1], 2));
-      double weight = exp(-(x_weight + y_weight)) / (2 * M_PI + std_landmark[0] * std_landmark[1]);
+      double x_weight = std_landmark[0];
+      double y_weight = std_landmark[1];
+      double weight = (1 / (2 * M_PI * x_weight * y_weight)) * exp( -(pow(pre_x - obvs_x, 2) / (2 * pow(y_weight, 2)) + (pow(pre_y - obvs_y, 2) / (2 * pow(y_weight, 2)))));
 
       particles[i].weight *= weight;
     }
