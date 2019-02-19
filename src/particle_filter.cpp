@@ -138,7 +138,6 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
   // pre  = predictions
 
   for (int i = 0; i < num_particles; i++) {
-    particles[i].weight = 1.0;
 
     double par_x =     particles[i].x;
     double par_y =     particles[i].y;
@@ -169,6 +168,8 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 
   // associate observation with closest landmark
     dataAssociation(predictions, trans_obvs);
+
+    particles[i].weight = 1.0;
 
   // update particle wieght based on observed distance and actual position of landmark
     for (unsigned int j = 0; j < trans_obvs.size(); j++) {
@@ -209,11 +210,12 @@ void ParticleFilter::resample() {
 
   // resampled particles init
   vector<Particle> resampled_particles;
+  resampled_particles.resize(num_particles);
 
   // resample according to weights
   for (int i = 0; i < num_particles; i++) {
     int j = dist(gen);
-    resampled_particles.push_back(particles[j]);
+    resampled_particles[i] = (particles[j]);
   }
 
   particles = resampled_particles;
