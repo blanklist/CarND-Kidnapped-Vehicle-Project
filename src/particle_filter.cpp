@@ -31,6 +31,7 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
    *   (and others in this file).
    */
   // Set the number of particles
+
   num_particles = 100;  
 
   // normal distributions
@@ -51,6 +52,8 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
   }
 
   is_initialized = true;
+  
+  cout << "INITIALIZATION complete\n";
 }
 
 void ParticleFilter::prediction(double delta_t, double std_pos[], 
@@ -84,6 +87,7 @@ void ParticleFilter::prediction(double delta_t, double std_pos[],
     particles[i].y += dist_y(gen);
     particles[i].theta += dist_theta(gen);
   }
+  cout << "PREDICTION complete\n";
 }
 
 void ParticleFilter::dataAssociation(vector<LandmarkObs> predicted, 
@@ -190,6 +194,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
       particles[i].weight *= weight;
     }
   }
+  cout << "WEIGHTS UPDATED\n";
 }
 
 void ParticleFilter::resample() {
@@ -217,6 +222,7 @@ void ParticleFilter::resample() {
   particles = resampled_particles;
 
   weights.clear();
+  cout << "RESAMPLE complete\n";
 }
 
 void ParticleFilter::SetAssociations(Particle& particle, 
@@ -235,8 +241,8 @@ void ParticleFilter::SetAssociations(Particle& particle,
 
 string ParticleFilter::getAssociations(Particle best) {
   vector<int> v = best.associations;
-  std::stringstream ss;
-  copy(v.begin(), v.end(), std::ostream_iterator<int>(ss, " "));
+  stringstream ss;
+  copy(v.begin(), v.end(), ostream_iterator<int>(ss, " "));
   string s = ss.str();
   s = s.substr(0, s.length()-1);  // get rid of the trailing space
   return s;
@@ -251,8 +257,8 @@ string ParticleFilter::getSenseCoord(Particle best, string coord) {
     v = best.sense_y;
   }
 
-  std::stringstream ss;
-  copy(v.begin(), v.end(), std::ostream_iterator<float>(ss, " "));
+  stringstream ss;
+  copy(v.begin(), v.end(), ostream_iterator<float>(ss, " "));
   string s = ss.str();
   s = s.substr(0, s.length()-1);  // get rid of the trailing space
   return s;
