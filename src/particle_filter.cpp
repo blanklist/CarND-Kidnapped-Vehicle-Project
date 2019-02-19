@@ -215,7 +215,7 @@ void ParticleFilter::resample() {
   // resample according to weights
   for (int i = 0; i < num_particles; i++) {
     int j = dist(gen);
-    resampled_particles[i] = (particles[j]);
+    resampled_particles[i] = particles[j];
   }
 
   particles = resampled_particles;
