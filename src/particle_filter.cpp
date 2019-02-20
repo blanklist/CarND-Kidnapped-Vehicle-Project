@@ -91,7 +91,13 @@ void ParticleFilter::prediction(double delta_t, double std_pos[],
     particles[i].x += dist_x(gen);
     particles[i].y += dist_y(gen);
     particles[i].theta += dist_theta(gen);
+    
+
+    cout << "particles[i].x: " << particles[i].x << "\n";
+    cout << "particles[i].y: " << particles[i].y << "\n";
+    cout << "particles[i].theta: " << particles[i].theta << "\n";
   }
+
   cout << "PREDICTION complete\n";
 }
 
