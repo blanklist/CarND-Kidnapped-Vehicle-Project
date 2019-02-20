@@ -147,12 +147,12 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
   // select the landmarks in range
     vector<LandmarkObs> predictions;
     for (unsigned int j = 0; j < map_landmarks.landmark_list.size(); j++){
-      double landmark_x = map_landmarks.landmark_list[j].x_f;
-      double landmark_y = map_landmarks.landmark_list[j].y_f;
+      float landmark_x = map_landmarks.landmark_list[j].x_f;
+      float landmark_y = map_landmarks.landmark_list[j].y_f;
       int   landmark_id = map_landmarks.landmark_list[j].id_i;
 
       double distance = dist(par_x, par_y, landmark_x, landmark_y);
-      if (fabs(landmark_x - par_y) <= sensor_range) {
+      if (fabs(landmark_x - par_y) <= sensor_range) && fabs(landmark_y - par_y) <= sensor_range {
         predictions.push_back(LandmarkObs{landmark_id, landmark_x, landmark_y});
       }
     }
@@ -187,9 +187,9 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 
       double x_weight = std_landmark[0];
       double y_weight = std_landmark[1];
-      double weight = (1 / (2 * M_PI * x_weight * y_weight)) * exp( -(pow(pre_x - obvs_x, 2) / (2 * pow(x_weight, 2)) + (pow(pre_y - obvs_y, 2) / (2 * pow(y_weight, 2)))));
+      double obs_weight = (1 / (2 * M_PI * x_weight * y_weight)) * exp( -(pow(pre_x - obvs_x, 2) / (2 * pow(x_weight, 2)) + (pow(pre_y - obvs_y, 2) / (2 * pow(y_weight, 2)))));
 
-      particles[i].weight *= weight;
+      particles[i].weight *= obs_weight;
 //       if (particles[i].weight != 0){
 // 	    cout << particles[i].weight;
 //       }
