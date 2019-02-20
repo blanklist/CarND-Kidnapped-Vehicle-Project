@@ -152,7 +152,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
       int   landmark_id = map_landmarks.landmark_list[j].id_i;
 
       double distance = dist(par_x, par_y, landmark_x, landmark_y);
-      if (fabs(landmark_x - par_y) <= sensor_range) && fabs(landmark_y - par_y) <= sensor_range {
+      if (fabs(landmark_x - par_y) <= sensor_range && fabs(landmark_y - par_y) <= sensor_range) {
         predictions.push_back(LandmarkObs{landmark_id, landmark_x, landmark_y});
       }
     }
@@ -234,14 +234,11 @@ void ParticleFilter::resample() {
     }
   }
 
-  // uniform real distribution
-  // urd<double> double_dist(0.0, max_weight);
-  urd<double> double_dist(0.0, max_weight);
-  //uniform integer distribution
-  uid<int> integer_dist(0, num_particles - 1);
-  int index = dist_integer(gen);
-  double beta = 0.0
-  vector<Particle> = resampled_particles;
+  uniform_real_distribution<double> double_dist(0.0, max_weight);
+  uniform_int_distribution<int> integer_dist(0, num_particles - 1);
+  int index = integer_dist(gen);
+  double beta = 0.0;
+  vector<Particle> resampled_particles;
   for (int i = 0; i < num_particles; i++) {
     beta += double_dist(gen) * 2.0;
     while (beta > weights[index]) {
@@ -251,7 +248,7 @@ void ParticleFilter::resample() {
     resampled_particles.push_back(particles[index]);
   }
 
-  particles = resampled_particles
+  particles = resampled_particles;
 }
 
 void ParticleFilter::SetAssociations(Particle& particle, 
