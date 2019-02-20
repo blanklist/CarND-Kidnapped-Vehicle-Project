@@ -190,6 +190,9 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
       double weight = (1 / (2 * M_PI * x_weight * y_weight)) * exp( -(pow(pre_x - obvs_x, 2) / (2 * pow(x_weight, 2)) + (pow(pre_y - obvs_y, 2) / (2 * pow(y_weight, 2)))));
 
       particles[i].weight *= weight;
+//       if (particles[i].weight != 0){
+// 	    cout << particles[i].weight;
+//       }
     }
   }
   cout << "WEIGHTS UPDATED\n";
