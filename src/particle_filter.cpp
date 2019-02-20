@@ -92,10 +92,10 @@ void ParticleFilter::prediction(double delta_t, double std_pos[],
     particles[i].y += dist_y(gen);
     particles[i].theta += dist_theta(gen);
     
-
-    cout << "particles[i].x: " << particles[i].x << "\n";
-    cout << "particles[i].y: " << particles[i].y << "\n";
-    cout << "particles[i].theta: " << particles[i].theta << "\n";
+    // sanity check
+    // cout << "particles[i].x: " << particles[i].x << "\n";
+    // cout << "particles[i].y: " << particles[i].y << "\n";
+    // cout << "particles[i].theta: " << particles[i].theta << "\n";
   }
 
   cout << "PREDICTION complete\n";
@@ -150,20 +150,21 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 
   for (int i = 0; i < num_particles; i++) {
 
-    double par_x =     particles[i].x;
-    double par_y =     particles[i].y;
-    double par_theta = particles[i].theta;
+    double particle_x =     particles[i].x;
+    double particle_y =     particles[i].y;
+    double particle_theta = particles[i].theta;
 
 
   // select the landmarks in range
     vector<LandmarkObs> predictions;
-    for (unsigned int j = 0; j < map_landmarks.landmark_list.size(); j++){
+
+    for (unsigned int j = 0; j < map_landmarks.landmark_list.size(); j++) {
       float landmark_x = map_landmarks.landmark_list[j].x_f;
       float landmark_y = map_landmarks.landmark_list[j].y_f;
       int   landmark_id = map_landmarks.landmark_list[j].id_i;
 
-      double distance = dist(par_x, par_y, landmark_x, landmark_y);
-      if (fabs(landmark_x - par_y) <= sensor_range && fabs(landmark_y - par_y) <= sensor_range) {
+      // double distance = dist(par_x, par_y, landmark_x, landmark_y);
+      if (fabs(landmark_x - particle_x) <= sensor_range && fabs(landmark_y - particle_y) <= sensor_range) {
         predictions.push_back(LandmarkObs{landmark_id, landmark_x, landmark_y});
       }
     }
@@ -171,8 +172,8 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
   // transform observations from VEH to MAP coordinates
     vector<LandmarkObs> trans_obvs;
     for (unsigned int j = 0; j < observations.size(); j++) {
-      double trans_x = cos(par_theta) * observations[j].x - sin(par_theta) * observations[j].y + par_x;
-      double trans_y = sin(par_theta) * observations[j].x + cos(par_theta) * observations[j].y + par_y;
+      double trans_x = cos(particle_theta) * observations[j].x - sin(particle_theta) * observations[j].y + particle_x;
+      double trans_y = sin(particle_theta) * observations[j].x + cos(particle_theta) * observations[j].y + particle_y;
       double trans_id = observations[j].id;
       trans_obvs.push_back(LandmarkObs{trans_id, trans_x, trans_y});
     }
@@ -189,7 +190,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
       obvs_y = trans_obvs[j].y;
 
       // coordinates of assiciate prediction
-      for (int k = 0; k < predictions.size(); k++) {
+      for (unsigned int k = 0; k < predictions.size(); k++) {
         if (predictions[k].id == trans_obvs[j].id) {
           pre_x = predictions[k].x;
           pre_y = predictions[k].y;
