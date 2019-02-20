@@ -32,6 +32,8 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
    */
   // Set the number of particles
 
+  if(is_initialized) {return;}
+
   num_particles = 100;  
 
   // normal distributions
@@ -54,6 +56,7 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
   is_initialized = true;
   
   cout << "INITIALIZATION complete\n";
+  cout << "particles: " << particles << "\n";
 }
 
 void ParticleFilter::prediction(double delta_t, double std_pos[], 
