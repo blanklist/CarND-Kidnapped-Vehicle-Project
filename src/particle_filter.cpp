@@ -152,7 +152,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
       int   landmark_id = map_landmarks.landmark_list[j].id_i;
 
       double distance = dist(par_x, par_y, landmark_x, landmark_y);
-      if (distance < sensor_range) {
+      if (fabs(landmark_x - par_y) <= sensor_range) {
         predictions.push_back(LandmarkObs{landmark_id, landmark_x, landmark_y});
       }
     }
@@ -206,25 +206,52 @@ void ParticleFilter::resample() {
    *   http://en.cppreference.com/w/cpp/numeric/random/discrete_distribution
    */
 
-  // generate distribution
-  random_device rd;
-  mt19937 gen(rd());
-  discrete_distribution<> dist(weights.begin(), weights.end());
+  // // generate distribution
+  // random_device rd;
+  // mt19937 gen(rd());
+  // discrete_distribution<> dist(weights.begin(), weights.end());
 
-  // resampled particles init
-  vector<Particle> resampled_particles;
-  resampled_particles.resize(num_particles);
+  // // resampled particles init
+  // vector<Particle> resampled_particles;
+  // resampled_particles.resize(num_particles);
 
-  // resample according to weights
+  // // resample according to weights
+  // for (int i = 0; i < num_particles; i++) {
+  //   int j = dist(gen);
+  //   resampled_particles[i] = particles[j];
+  // }
+
+  // particles = resampled_particles;
+
+  // weights.clear();
+  // cout << "RESAMPLE complete\n";
+  vector<double> weights;
+  double max_weight = numeric_limits<double>::min();
   for (int i = 0; i < num_particles; i++) {
-    int j = dist(gen);
-    resampled_particles[i] = particles[j];
+    weights.push_back(particles[i].weight);
+    if (particles[i].weight > max_weight) {
+      max_weight = particles[i].weight;
+    }
   }
 
-  particles = resampled_particles;
+  // uniform real distribution
+  // urd<double> double_dist(0.0, max_weight);
+  urd<double> double_dist(0.0, max_weight);
+  //uniform integer distribution
+  uid<int> integer_dist(0, num_particles - 1);
+  int index = dist_integer(gen);
+  double beta = 0.0
+  vector<Particle> = resampled_particles;
+  for (int i = 0; i < num_particles; i++) {
+    beta += double_dist(gen) * 2.0;
+    while (beta > weights[index]) {
+      beta -= weights[index];
+      index = (index + 1) % num_particles;
+    }
+    resampled_particles.push_back(particles[index]);
+  }
 
-  weights.clear();
-  cout << "RESAMPLE complete\n";
+  particles = resampled_particles
 }
 
 void ParticleFilter::SetAssociations(Particle& particle, 
