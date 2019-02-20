@@ -56,9 +56,9 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
   is_initialized = true;
   
   cout << "INITIALIZATION complete\n";
-  for (int i = 0; i < num_particles; i++) {
-    cout << "particle " << i << ":" particles[i] << "\n";
-  }
+//   for (int i = 0; i < num_particles; i++) {
+//     cout << i;
+//   }
 }
 
 void ParticleFilter::prediction(double delta_t, double std_pos[], 
