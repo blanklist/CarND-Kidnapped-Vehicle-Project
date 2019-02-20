@@ -209,49 +209,54 @@ void ParticleFilter::resample() {
    *   http://en.cppreference.com/w/cpp/numeric/random/discrete_distribution
    */
 
-  // // generate distribution
-  // random_device rd;
-  // mt19937 gen(rd());
-  // discrete_distribution<> dist(weights.begin(), weights.end());
+  // generate distribution
+  random_device rd;
+  mt19937 gen(rd());
+  discrete_distribution<> dist(weights.begin(), weights.end());
 
-  // // resampled particles init
-  // vector<Particle> resampled_particles;
-  // resampled_particles.resize(num_particles);
-
-  // // resample according to weights
-  // for (int i = 0; i < num_particles; i++) {
-  //   int j = dist(gen);
-  //   resampled_particles[i] = particles[j];
-  // }
-
-  // particles = resampled_particles;
-
-  // weights.clear();
-  // cout << "RESAMPLE complete\n";
-  vector<double> weights;
-  double max_weight = numeric_limits<double>::min();
-  for (int i = 0; i < num_particles; i++) {
-    weights.push_back(particles[i].weight);
-    if (particles[i].weight > max_weight) {
-      max_weight = particles[i].weight;
-    }
-  }
-
-  uniform_real_distribution<double> double_dist(0.0, max_weight);
-  uniform_int_distribution<int> integer_dist(0, num_particles - 1);
-  int index = integer_dist(gen);
-  double beta = 0.0;
+  // resampled particles init
   vector<Particle> resampled_particles;
+  resampled_particles.resize(num_particles);
+
+  // resample according to weights
   for (int i = 0; i < num_particles; i++) {
-    beta += double_dist(gen) * 2.0;
-    while (beta > weights[index]) {
-      beta -= weights[index];
-      index = (index + 1) % num_particles;
-    }
-    resampled_particles.push_back(particles[index]);
+    int j = dist(gen);
+    resampled_particles[i] = particles[j];
   }
+
+//   particles = resampled_particles;
+//   vector<double> weights;
+//   double max_weight = numeric_limits<double>::min();
+//   for (int i = 0; i < num_particles; i++) {
+//     weights.push_back(particles[i].weight);
+//     if (particles[i].weight > max_weight) {
+//       max_weight = particles[i].weight;
+//     }
+//   }
+
+//   vector<double> weights;
+//   for (int i = 0; i < num_particles; i++) {
+//     weights.push_back(particles[i].weight);
+//   }
+//   uniform_int_distribution<int> integer_dist(0, num_particles - 1);
+//   int index = integer_dist(gen);
+//   double beta = 0.0;
+//   vector<Particle> resampled_particles;
+//   double max_weight = *max_element(weights.begin(), weights.end());
+//   uniform_real_distribution<double> real_dist(0.0, max_weight);
+//   for (int i = 0; i < num_particles; i++) {
+//     beta += real_dist(gen) * 2.0;
+//     while (beta > weights[index]) {
+//       beta -= weights[index];
+//       index = (index + 1) % num_particles;
+//     }
+//     resampled_particles.push_back(particles[index]);
+//   }
 
   particles = resampled_particles;
+
+  cout << "RESAMPLE complete\n";
+
 }
 
 void ParticleFilter::SetAssociations(Particle& particle, 
