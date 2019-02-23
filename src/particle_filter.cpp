@@ -174,7 +174,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
     for (unsigned int j = 0; j < observations.size(); j++) {
       double trans_x = cos(particle_theta) * observations[j].x - sin(particle_theta) * observations[j].y + particle_x;
       double trans_y = sin(particle_theta) * observations[j].x + cos(particle_theta) * observations[j].y + particle_y;
-      double trans_id = observations[j].id;
+      int trans_id = observations[j].id;
       trans_obvs.push_back(LandmarkObs{trans_id, trans_x, trans_y});
     }
 
@@ -217,23 +217,6 @@ void ParticleFilter::resample() {
    * NOTE: You may find std::discrete_distribution helpful here.
    *   http://en.cppreference.com/w/cpp/numeric/random/discrete_distribution
    */
-
-  // generate distribution
-  // random_device rd;
-  // mt19937 gen(rd());
-  // discrete_distribution<> dist(weights.begin(), weights.end());
-
-  // // resampled particles init
-  // vector<Particle> resampled_particles;
-  // resampled_particles.resize(num_particles);
-
-  // // resample according to weights
-  // for (int i = 0; i < num_particles; i++) {
-  //   int j = dist(gen);
-  //   resampled_particles[i] = particles[j];
-  // }
-
-//   particles = resampled_particles;
 
   vector<double> weights;
   double max_weight = numeric_limits<double>::min();
